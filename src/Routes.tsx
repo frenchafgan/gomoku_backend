@@ -1,7 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-// import ProtectedRoute, { ProtectedRouteProps } from './components/ProtectedRoute';
-
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Game from './pages/Game';
@@ -17,7 +15,6 @@ const AppRoutes: React.FC = () => {
         <Route path="/game" element={<Game />} />
         <Route path="/games" element={<GameHistory />} />
         <Route path="/game-log/:id" element={<GameLog />} />
-        {/* <ProtectedRoute path="/home" component={Home} /> */}
 
       </Routes>
     </Router>
