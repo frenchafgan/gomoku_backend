@@ -1,46 +1,67 @@
-# Getting Started with Create React App
+# Gomoku Web Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Background
 
-## Available Scripts
+This project is a web-based version of the classic board game Gomoku, also known as Five in a Row. The application is developed using React and TypeScript and offers an interactive and intuitive user interface. Players can compete to get five stones in a row, either horizontally, vertically, or diagonally.
 
-In the project directory, you can run:
+## Getting Started
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+- Make sure you have Node.js and npm installed on your machine. If not, you can download and install them from the [official Node.js website](https://nodejs.org/en/download/).
+- The project uses TypeScript, which comes pre-configured in the setup.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Setup
 
-### `npm test`
+1. Clone the repository to your local machine.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```bash
+git clone https://github.com/frenchafgan/Assignment_2_gomoku.git
+```
 
-### `npm run build`
+2. Navigate to the project directory.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+cd Assignment_2_gomoku
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+3. Install the required dependencies.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```bash
+npm install
+```
 
-### `npm run eject`
+### Running the Application
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+To start the application, run the following command in the terminal:
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+```bash
+npm start
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This will start the development server, and the application should open automatically in your web browser. If it doesn't, you can access it manually by going to `http://localhost:3000/`.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Game Rules
 
-## Learn More
+- Players take turns placing a stone of their chosen color on a cell of the grid.
+- The objective is to line up five stones of your color in a row, column, or diagonal.
+- The game ends when one of the players achieves this objective or when the grid is full, resulting in a draw.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Features
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- **Interactive Board**: Click to place stones and see the board update in real-time.
+- **Game History**: View a log of past games, complete with move history and winners.
+- **Scoreboard**: Keep track of wins and losses for an added layer of competition.
+- **Dynamic Board Size**: Choose from multiple board sizes for varied levels of difficulty.
+
+## Dependencies
+
+The project uses several npm packages to aid development:
+
+- `react` and `react-dom` for building the UI.
+- `react-redux` for state management.
+- `react-router-dom` for client-side routing.
+- `redux` for a predictable state container.
+- `typescript` for static type checking.
+
+Run `npm install` in at the location where the package.json file is located to install all the required dependencies.
