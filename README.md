@@ -65,3 +65,7 @@ The project uses several npm packages to aid development:
 - `typescript` for static type checking.
 
 Run `npm install` in at the location where the package.json file is located to install all the required dependencies.
+
+## Bonus Feature
+
+In the spirit of sportsmanship and friendship, the application allows players to logout after their session so that another player can log in and play also without affecting the game history of other players. This is achieved by storing the game history in the browser's local storage, which persists even after the user logs out.
