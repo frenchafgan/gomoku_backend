@@ -1,4 +1,7 @@
 import axios from 'axios';
+import {store} from './redux/store';
+
+
 
 axios.defaults.withCredentials = true;
 
@@ -7,9 +10,10 @@ const api = axios.create({
   baseURL: 'http://localhost:3001/', // Replace with your backend URL
 });
 
-// Function to get token from localStorage
+// Function to get token from reduxstore
 const getToken = () => {
-  return localStorage.getItem('token'); 
+  const state = store.getState();
+  return state.auth.token;
 };
 
 // Add a request interceptor to include the token in every request

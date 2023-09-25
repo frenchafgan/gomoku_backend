@@ -23,8 +23,10 @@ const Header: React.FC = () => {
             <div className="header-actions">
                 {!isAuthenticated && <Link to="/login" className="header-link">Login</Link>}
                 {!isAuthenticated && <Link to="/games" className="header-link">Previous Games</Link>}
+                {!isAuthenticated && <Link to="/signup" className="header-link">Sign Up</Link>}
                 {isAuthenticated && <Link to="/login" className="header-link">Login</Link>}
                 {isAuthenticated && <Link to="/games" className="header-link">Previous Games</Link>}
+                {isAuthenticated && <Link to="/signup" className="header-link">Sign Up</Link>}
             <div className="logout-button">
                 {isAuthenticated && <button onClick={handleLogout} className="header-link">Logout</button>}  {/* Logout button */}
             </div>
