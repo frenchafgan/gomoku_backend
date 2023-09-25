@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
-
-// Dummy game data (replace this with database later)
-const games = [];
+const Game = require('../models/Game');
 
 // Create a new game
-router.post('/create', (req, res) => {
-  const { gameId, board } = req.body;
-  games.push({ gameId, board });
+router.post('/create', async (req, res) => {
+  const { id, boardSize, date, moves, result, username } = req.body;
+  const newGame = new Game({ id, boardSize, date, moves, result, username });
+  await newGame.save();
   res.status(201).send('Game created');
 });
 

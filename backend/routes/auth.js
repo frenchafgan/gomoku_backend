@@ -4,10 +4,7 @@ const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('../models/User');
 
-// Dummy user data (replace this with database later)
-const users = [];
-
-//Test connection
+// Test connection
 router.get('/test', (req, res) => {
   res.send('Hello from auth');
 });
@@ -21,18 +18,10 @@ router.post('/signup', async (req, res) => {
   res.status(201).send('User created');
 });
 
-// Signup route
-router.post('/signup', async (req, res) => {
-  const { username, password } = req.body;
-  const hashedPassword = await bcrypt.hash(password, 10);
-  users.push({ username, password: hashedPassword });
-  res.status(201).send('User created');
-});
-
 // Login route
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  const user = users.find((u) => u.username === username);
+  const user = await User.findOne({ username });
   if (user && (await bcrypt.compare(password, user.password))) {
     const token = jwt.sign({ username }, 'secret_key', { expiresIn: '1h' });
     res.status(200).json({ token });

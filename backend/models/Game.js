@@ -1,13 +1,4 @@
 const mongoose = require('mongoose');
-const User = require('../models/User');
-
-// Create a new game
-router.post('/create', async (req, res) => {
-  const { id, boardSize, date, moves, result, username } = req.body;
-  const newGame = new Game({ id, boardSize, date, moves, result, username });
-  await newGame.save();
-  res.status(201).send('Game created');
-});
 
 const moveSchema = new mongoose.Schema(
   {
