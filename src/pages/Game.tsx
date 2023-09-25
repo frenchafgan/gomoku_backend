@@ -52,17 +52,19 @@ const Game: React.FC = () => {
             if (gameStatus === 'win' || gameStatus === 'draw') {
                 saveGameDetails(board, winner, username, moves);
             }
+            const action = await dispatch(createGame({ board, winner, username, moves }));
+            if (createGame.fulfilled.match(action)) {
+                setGameId(action.payload._id);  // Update the game ID here
+            }
             const gameData = {
-                id: gameId,  // Make sure this is not null
+                id: gameId,
                 boardSize: currentBoardSize,
                 date: new Date().toISOString(),
                 result: winner,
                 username: username,
-              };
-            const action = await dispatch(createGame(gameData));
-            if (createGame.fulfilled.match(action)) {
-                setGameId(action.payload._id);  // Update the game ID here
-            }
+                moves: moves
+            };
+            await dispatch(createGame(gameData));
             navigate('/games');
         } catch (error) {
             console.error("An error occurred while saving game details:", error);
@@ -100,17 +102,24 @@ const Game: React.FC = () => {
                 console.error("An error occurred while saving game details:", error);
                 return;  // Exit the function if there's an error
             }
+            const gameData = {
+                board: board,
+                winner: winner,
+                username: username,
+                moves: moves
+            };
+            await dispatch(createGame(gameData));
+            dispatch(restartGame(currentBoardSize));
+
         }
-    
         // Restart the game
-        dispatch(restartGame(currentBoardSize));
     };
     
     
 
     useEffect(() => {
-        const savedBoardSize = localStorage.getItem('boardSize');
-        const initialBoardSize = savedBoardSize ? JSON.parse(savedBoardSize) : 10;  // Default to 10 if not set
+        // Initialize the board size from Redux state
+        const initialBoardSize = currentBoardSize;
         dispatch(restartGame(initialBoardSize));
     
         // Function to fetch games list
@@ -124,8 +133,6 @@ const Game: React.FC = () => {
                     dispatch(updateGamesList(response.data));
                 }
             } catch (error) {
-                // Handle the error here
-                // For example, you can log the error or show a notification
                 console.error("An error occurred while fetching the games list:", error);
             }
         };
@@ -134,7 +141,8 @@ const Game: React.FC = () => {
         fetchGamesList();
     
         // Add token and dispatch as dependencies
-    }, [token, dispatch]);
+    }, [token, dispatch, currentBoardSize]);
+    
 
     
     return (

@@ -1,7 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import * as api from '../../../src/api';
+import * as api from '../../../src/api';  // Make sure this import is correct
 import { checkWin, isDraw } from '../../utils/gameUtils'; 
 import { RootState } from '../store';
+
 
 interface Move {
   x: number;
@@ -112,10 +113,22 @@ const gameSlice = createSlice({
 export const { makeMove, restartGame, setBoardSize, updateGamesList } = gameSlice.actions;
 
 export default gameSlice.reducer;
-export const createGame = createAsyncThunk('game/createGame', async (gameData: any) => {
-  const response = await api.createGame(gameData);
-  return response.data;
-});
+
+export const createGame = createAsyncThunk(
+  'game/createGame',
+  async (gameData: any, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;  // Get the current Redux state
+    const token = state.auth.token;  // Assuming the token is stored in auth slice
+
+    // Update the gameData object to include the token
+    gameData.token = token;
+
+    const response = await api.createGame(gameData);  // Use your specific createGame function
+
+    return response.data;
+  }
+);
+
 
 export const updateGame = createAsyncThunk('game/updateGame', async ({ gameId, gameData }: any) => {
   const response = await api.updateGame(gameId, gameData);

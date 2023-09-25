@@ -2,6 +2,7 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
+
 const api = axios.create({
   baseURL: 'http://localhost:3001/', // Replace with your backend URL
 });
@@ -38,15 +39,15 @@ export const logout = () => {
 
 
 export const createGame = (gameData: any) => {
-  const token = localStorage.getItem('token');  // Retrieve the token from local storage
+  const { token } = gameData;  // Extract the token from gameData
   const headers = token ? { 'Authorization': `${token}` } : undefined;
+
   return api.post('game/create', gameData, {
     headers: headers
   });
 };
 
-export const restartGame = (gameId: string, gameData: any) => {
-  const token = localStorage.getItem('token');  // Retrieve the token from local storage
+export const restartGame = (gameId: string, gameData: any, token: string | null) => {
   const headers = token ? { 'Authorization': `${token}` } : undefined;
   return api.post(`game/restart/${gameId}`, gameData, {
     headers: headers
@@ -74,4 +75,14 @@ export const getSingleGame = (gameId: string) => {
   return api.get(`game/${gameId}`, {
     headers: { Authorization: ` ${getToken()}` }
   });
+};
+
+export const getGameByIdAndUserApi = async (id: string, username: string, token: string) => {
+  const config = {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  };
+  const response = await axios.get(`/api/game/${id}/${username}`, config);
+  return response;
 };
