@@ -6,6 +6,8 @@ import '../styles/Game.css';
 import { useNavigate } from 'react-router-dom';
 import { saveGameDetails } from '../utils/gameUtils';
 import Header from '../components/Header';
+import { createGame, updateGame } from '../redux/game/gameSlice'; 
+
 
 
 const Game: React.FC = () => {
@@ -21,6 +23,8 @@ const Game: React.FC = () => {
     const handleCellClick = (x: number, y: number) => {
         if (board[y][x] === 0 && gameStatus === 'playing') {
             dispatch(makeMove({ x, y }));
+            dispatch(updateGame({ gameId: "actual_game_id_here", gameData: { board, currentPlayer, gameStatus, moves }}));
+
         }
     }
 
@@ -39,6 +43,7 @@ const Game: React.FC = () => {
             if (gameStatus === 'win' || gameStatus === 'draw') {
                 saveGameDetails(board, winner, username, moves);
             }
+            dispatch(createGame({ board, winner, username, moves }));
             navigate('/games');
         } catch (error) {
             console.error("An error occurred while saving game details:", error);

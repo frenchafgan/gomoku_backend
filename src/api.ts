@@ -20,3 +20,11 @@ export const updateGame = (gameId: string, gameData: any) => {
   return api.put(`game/update/${gameId}`, gameData);
 };
 
+export const getGamesList = () => {
+    return api.get('games');
+  };
+  
+  export const getSingleGame = (gameId: string) => {
+    return api.get(`game/${gameId}`);
+  };
+  
