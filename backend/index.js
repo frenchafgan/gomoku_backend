@@ -6,6 +6,16 @@ const gameRoutes = require('./routes/game'); // Import gameRoutes
 const authorize = require('./middleware/middleware');
 const mongoose = require('mongoose');
 
+//Enable CORS for all routes
+const cors = require('cors');
+
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true, // to support cookies
+};
+
+app.use(cors(corsOptions));
+
 // Middleware for parsing JSON
 app.use(express.json());
 

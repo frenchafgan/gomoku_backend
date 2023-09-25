@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import * as api from '../../../src/api';
 import { checkWin, isDraw } from '../../utils/gameUtils'; 
+import { RootState } from '../store';
+
 interface Move {
   x: number;
   y: number;
@@ -15,6 +17,7 @@ interface GameState {
   boardSize: number; 
   currentUser: string | null;
   moves: Move[];
+  gamesList: any[];
 }
 
 
@@ -30,6 +33,7 @@ const initialState: GameState = {
   boardSize: initialBoardSize,
   currentUser: null,
   moves: moves,
+  gamesList: [],
 };
 
 const gameSlice = createSlice({
@@ -74,7 +78,9 @@ const gameSlice = createSlice({
       state.moves = [];
     },
     
-    
+    updateGamesList: (state, action: PayloadAction<any[]>) => {
+      state.gamesList = action.payload;
+    },
     
   },
   
@@ -103,20 +109,36 @@ const gameSlice = createSlice({
   },
 });
 
-export const { makeMove, restartGame, setBoardSize } = gameSlice.actions;
+export const { makeMove, restartGame, setBoardSize, updateGamesList } = gameSlice.actions;
+
 export default gameSlice.reducer;
 export const createGame = createAsyncThunk('game/createGame', async (gameData: any) => {
   const response = await api.createGame(gameData);
   return response.data;
 });
 
-
 export const updateGame = createAsyncThunk('game/updateGame', async ({ gameId, gameData }: any) => {
   const response = await api.updateGame(gameId, gameData);
   return response.data;
 });
-export const getGamesList = createAsyncThunk('game/getGamesList', async () => {
-  const response = await api.getGamesList();
-  return response.data;
+
+export const getGamesList = createAsyncThunk('game/getGamesList', async (_, thunkAPI) => {
+  const state = thunkAPI.getState() as RootState;  // Cast the state to RootState
+  const token = state.auth.token;  // Get the token from the auth slice
+
+  if (!token) {
+    return thunkAPI.rejectWithValue('No token found');
+  }
+
+  try {
+    const response = await api.getGamesList(token);
+    return response.data;
+  } catch (error: unknown) {  // Specify that error is of type unknown
+    let errorMessage = 'An unknown error occurred';
+    if (error instanceof Error) {  // Type guard
+      errorMessage = error.message;
+    }
+    return thunkAPI.rejectWithValue(errorMessage);
+  }
 });
- 
+

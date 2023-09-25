@@ -2,17 +2,18 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import {logout} from '../redux/auth/authSlice';
-import '../styles/Header.css';  
+import '../styles/Header.css';
+import { AppDispatch } from '../redux/store';
+   
 
 const Header: React.FC = () => {
     
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
     const handleLogout = () => {
-        dispatch(logout());  
-        };
-
+        dispatch(logout()); // Dispatch logout action
+      }
     
 
     return (
