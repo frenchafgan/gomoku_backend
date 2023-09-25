@@ -7,11 +7,12 @@ import { useNavigate } from 'react-router-dom';
 import { saveGameDetails } from '../utils/gameUtils';
 import Header from '../components/Header';
 import { createGame, updateGame } from '../redux/game/gameSlice'; 
+import { AppDispatch } from '../redux/store';
+
 
 
 
 const Game: React.FC = () => {
-    const dispatch = useDispatch();
     const board = useSelector((state: RootState) => state.game.board);
     const currentPlayer = useSelector((state: RootState) => state.game.currentPlayer);
     const gameStatus = useSelector((state: RootState) => state.game.gameStatus);
@@ -19,6 +20,8 @@ const Game: React.FC = () => {
     const moves = useSelector((state: RootState) => state.game.moves);
     const currentBoardSize = useSelector((state: RootState) => state.game.boardSize);
     const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+
 
     const handleCellClick = (x: number, y: number) => {
         if (board[y][x] === 0 && gameStatus === 'playing') {
@@ -27,6 +30,8 @@ const Game: React.FC = () => {
 
         }
     }
+
+
 
 
     const handleLeave = () => {

@@ -5,20 +5,21 @@ import { login } from '../redux/auth/authSlice';
 import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header';
 import '../styles/Login.css';
+import { AppDispatch } from '../redux/store';
+
 
 const Login: React.FC = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const dispatch = useDispatch();
     const error = useSelector((state: RootState) => state.auth.error);
-
+    const dispatch = useDispatch<AppDispatch>();
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
     const navigate = useNavigate();
 
    
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        dispatch(login({ username, password })); //
+        dispatch(login({ username, password })); 
     }
     
 
