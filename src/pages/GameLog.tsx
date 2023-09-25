@@ -30,17 +30,26 @@ const GameLog: React.FC<GameLogProps> = () => {
     const currentUser = useSelector((state: RootState) => state.auth.currentUser);
 
     useEffect(() => {
-        if (id) {
-          // Fetch the game details from local storage or Redux store
-          const allGames = JSON.parse(localStorage.getItem('games') || '[]');
-          const foundGame = allGames.find((game: any) => game.id === parseInt(id, 10) && game.username === currentUser);
-          console.log("Fetched game data based on ID:", foundGame);
-      
-          if (foundGame) {
-            setGameDetails(foundGame);
-          }
+        if (id && currentUser) {
+            // Fetch the game details from the API
+            fetch(`/api/games/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Add any other headers here, like Authorization
+                },
+            })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data && data.username === currentUser) {
+                    setGameDetails(data);
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching game:', error);
+            });
         }
-      }, [id, currentUser]); // add currentUser to dependency array
+    }, [id, currentUser]);
       
 
     const renderCell = (x: number, y: number, cellColor: string) => {

@@ -16,6 +16,9 @@ router.post('/signup', async (req, res) => {
   const newUser = new User({ username, password: hashedPassword });
   await newUser.save();
   res.status(201).send('User created');
+  if (username.length < 3 || username.length > 50) {
+    return res.status(400).json({ error: 'Invalid username length' });
+  }
 });
 
 // Login route
