@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
+const User = require('../models/User');
 
 // Dummy user data (replace this with database later)
 const users = [];
@@ -9,6 +10,15 @@ const users = [];
 //Test connection
 router.get('/test', (req, res) => {
   res.send('Hello from auth');
+});
+
+// Signup route
+router.post('/signup', async (req, res) => {
+  const { username, password } = req.body;
+  const hashedPassword = await bcrypt.hash(password, 10);
+  const newUser = new User({ username, password: hashedPassword });
+  await newUser.save();
+  res.status(201).send('User created');
 });
 
 // Signup route
