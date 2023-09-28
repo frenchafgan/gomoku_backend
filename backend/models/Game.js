@@ -1,30 +1,32 @@
 const mongoose = require('mongoose');
 
-const moveSchema = new mongoose.Schema(
-  {
-    color: { type: String, required: true },
-    order: { type: Number, required: true },
-    x: { type: Number, required: true },
-    y: { type: Number, required: true },
-  },
-  { _id: false }
-);
+const moveSchema = new mongoose.Schema({
+  color: { type: String, required: true },
+  order: { type: Number, required: true },
+  x: { type: Number, required: true },
+  y: { type: Number, required: true },
+});
+
+const boardCellSchema = new mongoose.Schema({
+  type: { type: Number, required: true },
+});
+
+const boardRowSchema = new mongoose.Schema({
+  cells: { type: [boardCellSchema], required: true },
+});
 
 const gameSchema = new mongoose.Schema({
-  id: { type: Number, required: true, unique: true },
-  boardSize: { type: Number, required: true },
+  board: { type: [boardRowSchema], required: true },
+  winner: { type: String, required: true },
   date: { type: Date, required: true },
-  moves: {
-    type: Array,
-    validate: {
-      validator: function (arr) {
-        return arr.length <= 400;
-      },
-      message: 'Invalid number of moves',
-    },
-    result: { type: String, required: true },
-    username: { type: String, required: true },
-  },
+  username: { type: String },
+  moves: { type: [moveSchema], required: true },
+  result: { type: String, required: true },
+  boardSize: { type: Number },
+  currentPlayer: { type: Number, required: true },
+  gameStatus: { type: String, required: true },
+  currentUser: { type: String },
+  gamesList: { type: [String], default: [] },
 });
 
 module.exports = mongoose.model('Game', gameSchema);

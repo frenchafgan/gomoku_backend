@@ -2,7 +2,7 @@
   "name": "gomoku_game",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001",
+  "proxy": "http://localhost:3000",
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.5",
     "@testing-library/jest-dom": "^5.17.0",
@@ -21,6 +21,7 @@
     "react-scripts": "5.0.1",
     "react18": "^0.0.1-security",
     "typescript": "^4.9.5",
+    "uuid": "^9.0.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -50,6 +51,7 @@
     ]
   },
   "devDependencies": {
+    "@types/uuid": "^9.0.4",
     "concurrently": "^8.2.1"
   }
 }

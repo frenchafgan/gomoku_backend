@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 import '../styles/GameLog.css';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import Header from '../components/Header';
+import { v4 as uuidv4 } from 'uuid';
 
 
 interface Move {
@@ -24,7 +25,8 @@ interface GameDetails {
 }
 
 const GameLog: React.FC<GameLogProps> = () => {
-    const { id } = useParams<{ id: string }>();
+    const uniqueId = uuidv4();  // This will generate a unique ID
+    const id = uniqueId; 
     const [gameDetails, setGameDetails] = useState<GameDetails | null>(null);
     const navigate = useNavigate();
     const currentUser = useSelector((state: RootState) => state.auth.currentUser);
@@ -32,7 +34,7 @@ const GameLog: React.FC<GameLogProps> = () => {
     useEffect(() => {
         if (id && currentUser) {
             // Fetch the game details from the API
-            fetch(`/api/games/${id}`, {
+            fetch(`/games`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',

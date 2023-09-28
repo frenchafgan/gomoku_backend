@@ -1,8 +1,7 @@
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import * as api from '../../../src/api';  // Make sure this import is correct
-import { checkWin, isDraw } from '../../utils/gameUtils'; 
+import * as api from '../../../src/api'; // Make sure this import is correct
+import { checkWin, isDraw } from '../../utils/gameUtils';
 import { RootState } from '../store';
-
 
 interface Move {
   x: number;
@@ -15,12 +14,11 @@ interface GameState {
   board: number[][];
   currentPlayer: number;
   gameStatus: 'playing' | 'draw' | 'win';
-  boardSize: number; 
+  boardSize: number;
   currentUser: string | null;
   moves: Move[];
   gamesList: any[];
 }
-
 
 const initialBoard = Array.from({ length: 20 }, () => Array(20).fill(0));
 const savedBoardSize = localStorage.getItem('boardSize');
@@ -42,24 +40,29 @@ const gameSlice = createSlice({
   initialState,
   reducers: {
     makeMove(state, action: PayloadAction<{ x: number; y: number }>) {
-        const { x, y } = action.payload;
-        if (state.board[y][x] === 0) {
-            state.board[y][x] = state.currentPlayer;
-    
-            // Record the move
-            const moveColor = state.currentPlayer === 1 ? 'black' : 'white';
-            state.moves.push({ x, y, color: moveColor, order: state.moves.length + 1 });
-        
-            if (checkWin(state.board, x, y, state.currentPlayer)) {
-                state.gameStatus = 'win';
-            } else if (isDraw(state.board)) {
-                state.gameStatus = 'draw';
-            } else {
-                state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
-            }
+      const { x, y } = action.payload;
+      if (state.board[y][x] === 0) {
+        state.board[y][x] = state.currentPlayer;
+
+        // Record the move
+        const moveColor = state.currentPlayer === 1 ? 'black' : 'white';
+        state.moves.push({
+          x,
+          y,
+          color: moveColor,
+          order: state.moves.length + 1,
+        });
+
+        if (checkWin(state.board, x, y, state.currentPlayer)) {
+          state.gameStatus = 'win';
+        } else if (isDraw(state.board)) {
+          state.gameStatus = 'draw';
+        } else {
+          state.currentPlayer = state.currentPlayer === 1 ? 2 : 1;
         }
+      }
     },
-    
+
     setBoardSize(state, action: PayloadAction<number>) {
       const size = action.payload;
       state.board = Array.from({ length: size }, () => Array(size).fill(0));
@@ -68,23 +71,26 @@ const gameSlice = createSlice({
     restartGame: (state, action: PayloadAction<number>) => {
       // You can now use action.payload as the board size
       const savedBoardSize = localStorage.getItem('boardSize');
-      const boardSize = savedBoardSize ? JSON.parse(savedBoardSize) : action.payload;
-    
+      const boardSize = savedBoardSize
+        ? JSON.parse(savedBoardSize)
+        : action.payload;
+
       // Reset the board while keeping the size
-      state.board = Array.from({ length: boardSize }, () => Array(boardSize).fill(0));
-      
+      state.board = Array.from({ length: boardSize }, () =>
+        Array(boardSize).fill(0)
+      );
+
       // Reset the player and game status
       state.currentPlayer = 1;
       state.gameStatus = 'playing';
       state.moves = [];
     },
-    
+
     updateGamesList: (state, action: PayloadAction<any[]>) => {
       state.gamesList = action.payload;
     },
-    
   },
-  
+
   extraReducers: (builder) => {
     builder
       .addCase(createGame.fulfilled, (state, action) => {
@@ -110,48 +116,51 @@ const gameSlice = createSlice({
   },
 });
 
-export const { makeMove, restartGame, setBoardSize, updateGamesList } = gameSlice.actions;
+export const { makeMove, restartGame, setBoardSize, updateGamesList } =
+  gameSlice.actions;
 
 export default gameSlice.reducer;
 
 export const createGame = createAsyncThunk(
   'game/createGame',
-  async (gameData: any, thunkAPI) => {
-    const state = thunkAPI.getState() as RootState;  // Get the current Redux state
-    const token = state.auth.token;  // Assuming the token is stored in auth slice
+  async (gameData: GameState, thunkAPI) => {
+    // Replace YourGameDataType with the actual type
 
-    // Update the gameData object to include the token
-    gameData.token = token;
-
-    const response = await api.createGame(gameData);  // Use your specific createGame function
+    const response = await api.createGame(gameData); // Use your specific createGame function
 
     return response.data;
   }
 );
 
-
-export const updateGame = createAsyncThunk('game/updateGame', async ({ gameId, gameData }: any) => {
-  const response = await api.updateGame(gameId, gameData);
-  return response.data;
-});
-
-export const getGamesList = createAsyncThunk('game/getGamesList', async (_, thunkAPI) => {
-  const state = thunkAPI.getState() as RootState;  // Cast the state to RootState
-  const token = state.auth.token;  // Get the token from the auth slice
-
-  if (!token) {
-    return thunkAPI.rejectWithValue('No token found');
-  }
-
-  try {
-    const response = await api.getGamesList(token);
+export const updateGame = createAsyncThunk(
+  'game/updateGame',
+  async ({ gameId, gameData }: any) => {
+    const response = await api.updateGame(gameId, gameData);
     return response.data;
-  } catch (error: unknown) {  // Specify that error is of type unknown
-    let errorMessage = 'An unknown error occurred';
-    if (error instanceof Error) {  // Type guard
-      errorMessage = error.message;
-    }
-    return thunkAPI.rejectWithValue(errorMessage);
   }
-});
+);
 
+export const getGamesList = createAsyncThunk(
+  'game/getGamesList',
+  async (_, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState; // Cast the state to RootState
+    const token = state.auth.token; // Get the token from the auth slice
+
+    if (!token) {
+      return thunkAPI.rejectWithValue('No token found');
+    }
+
+    try {
+      const response = await api.getGamesList(token);
+      return response.data;
+    } catch (error: unknown) {
+      // Specify that error is of type unknown
+      let errorMessage = 'An unknown error occurred';
+      if (error instanceof Error) {
+        // Type guard
+        errorMessage = error.message;
+      }
+      return thunkAPI.rejectWithValue(errorMessage);
+    }
+  }
+);

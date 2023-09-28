@@ -2,15 +2,17 @@ const express = require('express');
 const app = express();
 const PORT = 3001;
 const authRoutes = require('./routes/auth');
-const gameRoutes = require('./routes/game'); // Import gameRoutes
+const gameRoutes = require('./routes/game');
 const authorize = require('./middleware/middleware');
 const mongoose = require('mongoose');
+const Game = require('./models/Game');
 
-//Enable CORS for all routes
+// Enable CORS for all routes
 const cors = require('cors');
 
 const corsOptions = {
   origin: 'http://localhost:3000',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true, // to support cookies
 };
 
@@ -21,11 +23,15 @@ app.use(express.json());
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb://localhost:27017/gomoku', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
+  .connect(
+    'mongodb+srv://dbuser:Ilovecake123@gomoku.cjr0axx.mongodb.net/?retryWrites=true&w=majority',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    }
+  )
+  .then(async () => {
+    // Mark this function as async
     console.log('Connected to MongoDB');
 
     // Use auth routes
@@ -39,9 +45,11 @@ mongoose
       res.send('This is a protected route');
     });
 
-    // Root route
-    app.get('/', (req, res) => {
-      res.send('Hello, World!');
+    // Fetch all games
+    app.get('/games', async (req, res) => {
+      // Mark this function as async
+      const games = await Game.find({}); // This should work now
+      res.status(200).json(games);
     });
 
     // Global error-handling middleware (optional)
@@ -51,7 +59,7 @@ mongoose
     });
 
     // Start the server
-    app.listen(PORT, () => {
+    app.listen(3001, () => {
       console.log(`Server is running on port ${PORT}`);
     });
   })
